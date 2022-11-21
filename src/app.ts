@@ -8,7 +8,7 @@ export const client = mqtt.connect(process.env.MQTT_URI as string)
 const app = express()
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
+  res.send('Hello Fuckers')
   client.publish('test', 'Hello from gateway!')
 })
 

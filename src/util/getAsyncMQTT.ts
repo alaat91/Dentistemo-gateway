@@ -4,11 +4,11 @@ import { client } from '../app'
 export const getAsyncMQTT = async (
   pubTopic: string,
   subTopic: string,
-  message: JSON,
+  message: string,
   QOS?: number
 ): Promise<JSON> => {
   const mqttPromise = new Promise((resolve, reject) => {
-    client.publish(pubTopic, message.toString(), { qos: (QOS as QoS) ?? 1 })
+    client.publish(pubTopic, message, { qos: (QOS as QoS) ?? 1 })
     client.subscribe(subTopic)
     setTimeout(() => {
       reject(new Error('timeout'))
