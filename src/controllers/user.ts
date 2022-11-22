@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express'
 
 const router = Router()
 import { verifyUser } from '../middleware/verifyUser'
-import { getAsyncMQTT } from '../util/getAsyncMQTT'
+import { getMQTTResponse } from '../util/getMQTTResponse'
 
 interface UserProfile extends JSON {
   userid: number
@@ -12,11 +12,11 @@ interface UserProfile extends JSON {
 router.get('profile', verifyUser, async (req: Request, res: Response) => {
   const userID = req.body.id
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/profile',
       'gateway/user/profile',
       JSON.parse(userID)
-    )) as UserProfile
+    )
     res.send(response)
   } catch (err) {
     res.status(500).send((err as Error).message)
@@ -27,11 +27,11 @@ router.put('profile', verifyUser, async (req: Request, res: Response) => {
   const userID = req.body.id
 
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/profile/update',
       'gateway/user/profile/update',
       JSON.parse(userID)
-    )) as UserProfile
+    )
     res.send(response)
   } catch (err) {
     res.status(500).send((err as Error).message)
@@ -47,11 +47,11 @@ router.put(
     const newPassword = req.body.id
 
     try {
-      const response = (await getAsyncMQTT(
+      const response = await getMQTTResponse(
         'user/profile/password',
         'gateway/user/profile/password',
         JSON.parse(userID)
-      )) as UserProfile
+      )
 
       res.send(response)
     } catch (err) {

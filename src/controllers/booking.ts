@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express'
 const router = Router()
 
 import { verifyUser } from '../middleware/verifyUser'
-import { getAsyncMQTT } from '../util/getAsyncMQTT'
+import { getMQTTResponse } from '../util/getMQTTResponse'
 
 interface UserBooking extends JSON {
   userid: number
@@ -26,11 +26,11 @@ interface UserBooking2 extends JSON {
 router.get('/bookings', verifyUser, async (req: Request, res: Response) => {
   const info = { userid: '3', requestid: 10, time: '10:30' }
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/booking',
       'gateway/user/booking',
-      JSON.stringify(info.userid)
-    )) as UserBooking
+      { userId: info.userid }
+    )
 
     res.send(response)
   } catch (err) {
@@ -41,11 +41,11 @@ router.get('/bookings', verifyUser, async (req: Request, res: Response) => {
 router.get('/bookings/:id', verifyUser, async (req: Request, res: Response) => {
   const bookingId = req.params.id
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/booking/id',
       'gateway/user/booking/id',
-      JSON.stringify(bookingId)
-    )) as UserBooking
+      { bookingId }
+    )
     res.send(response)
   } catch (err) {
     res.status(500).send((err as Error).message)
@@ -54,30 +54,30 @@ router.get('/bookings/:id', verifyUser, async (req: Request, res: Response) => {
 
 router.post('bookings', verifyUser, async (req: Request, res: Response) => {
   const userId = req.body.userid
-  const bookingTime = req.body.time
+  const { startTime, endTime } = req.body
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/booking/create',
       'gateway/user/booking/create',
-      JSON.stringify({ userId, bookingTime })
-    )) as UserBooking
+      { userId, startTime, endTime }
+    )
     res.send(response)
   } catch (err) {
     res.status(500).send((err as Error).message)
   }
 })
 
-router.put('bookings', verifyUser, async (req: Request, res: Response) => {
-  const userId: string = req.body.id
-  const bookingId: string = req.body.id
-  const newTime: string = req.body.id
+router.put('bookings/:id', verifyUser, async (req: Request, res: Response) => {
+  const userId = '1'
+  const bookingId = req.params.id
+  const { startTime, endTime } = req.body
 
   try {
-    const response = (await getAsyncMQTT(
+    const response = await getMQTTResponse(
       'user/booking/update',
       'gateway/user/booking/update',
-      JSON.stringify({ userId, bookingId, newTime })
-    )) as UserBooking
+      { userId, bookingId, startTime, endTime }
+    )
 
     res.send(response)
   } catch (err) {
@@ -89,15 +89,15 @@ router.delete(
   'bookings/:id',
   verifyUser,
   async (req: Request, res: Response) => {
-    const userID = req.body.id
+    const userId = req.body.id
     const bookingId = req.body.id
 
     try {
-      const response = (await getAsyncMQTT(
+      const response = await getMQTTResponse(
         'user/booking/delete',
         'gateway/user/booking/delete',
-        JSON.stringify({ userID, bookingId })
-      )) as UserBooking
+        { userId, bookingId }
+      )
       res.send(response)
     } catch (err) {
       res.status(500).send((err as Error).message)
