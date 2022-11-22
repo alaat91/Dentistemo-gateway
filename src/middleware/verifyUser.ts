@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { getAsyncMQTT } from '../util/getAsyncMQTT'
-
-interface verifyUserResponse extends JSON {
-  id: string
-  verified: boolean
-}
+import { VerificationResponse } from '../types/VerificationResponse'
+import { getMQTTResponse } from '../util/getMQTTResponse'
+import { VERIFY_USER, VERIFY_USER_RESPONSE } from '../util/topics'
 
 export const verifyUser = async (
   req: Request,
@@ -13,11 +10,9 @@ export const verifyUser = async (
 ) => {
   const token = 'token'
   try {
-    const response = (await getAsyncMQTT(
-      'auth/verify',
-      'gateway/auth/verify',
-      JSON.parse(token)
-    )) as verifyUserResponse
+    const response = (await getMQTTResponse(VERIFY_USER, VERIFY_USER_RESPONSE, {
+      token,
+    })) as VerificationResponse
     if (response.verified) {
       next()
     } else {
