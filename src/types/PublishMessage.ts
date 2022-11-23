@@ -1,8 +1,8 @@
 export interface PublishMessage {
-  userId?: string
+  userid?: string
   token?: string
   bookingId?: string
   slotId?: string
-  startTime?: string
-  endTime?: string
+  time?: number
+  issuance?: number
 }

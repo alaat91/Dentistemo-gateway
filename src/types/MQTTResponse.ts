@@ -1,3 +1,3 @@
 export interface MQTTResponse {
-  userId: string
+  userid: string
 }
