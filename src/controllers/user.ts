@@ -1,12 +1,12 @@
 import { Request, Response, Router } from 'express'
 
-const router = Router()
+export const router = Router()
 import { verifyUser } from '../middleware/verifyUser'
 import { PasswordRequest } from '../types/PasswordRequest'
 import { UserProfile } from '../types/UserProfile'
 import { getMQTTResponse } from '../util/getMQTTResponse'
 
-router.get('profile', verifyUser, async (req: Request, res: Response) => {
+router.get('/profile', verifyUser, async (req: Request, res: Response) => {
   const userid = req.body.id
   try {
     const response = (await getMQTTResponse(
@@ -20,7 +20,7 @@ router.get('profile', verifyUser, async (req: Request, res: Response) => {
   }
 })
 
-router.put('profile', verifyUser, async (req: Request, res: Response) => {
+router.put('/profile', verifyUser, async (req: Request, res: Response) => {
   const userID = req.body.id
 
   try {
@@ -36,7 +36,7 @@ router.put('profile', verifyUser, async (req: Request, res: Response) => {
 })
 
 router.put(
-  'profile/password',
+  '/profile/password',
   verifyUser,
   async (req: Request, res: Response) => {
     const userid = req.body.id
