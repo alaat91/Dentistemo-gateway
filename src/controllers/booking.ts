@@ -25,11 +25,12 @@ router.get('/', verifyUser, async (req: Request, res: Response) => {
 
 router.get('/:id', verifyUser, async (req: Request, res: Response) => {
   const bookingId = req.params.id
+  const userid = '1'
   try {
     const response = (await getMQTTResponse(
       'user/booking',
       'gateway/user/booking',
-      { bookingId }
+      { bookingId, userid }
     )) as Booking
     res.send(response)
   } catch (err) {

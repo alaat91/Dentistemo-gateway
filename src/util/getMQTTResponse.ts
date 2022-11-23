@@ -1,4 +1,5 @@
 import { QoS } from 'mqtt'
+import { parse } from 'path'
 import { client } from '../app'
 import { MQTTResponse } from '../types/MQTTResponse'
 import { PublishMessage } from '../types/PublishMessage'
@@ -18,8 +19,9 @@ export const getMQTTResponse = async (
       reject(new Error('timeout'))
     }, 15000)
     client.on('message', (topic: string, message: string) => {
-      if (topic === subTopic) {
-        resolve(JSON.parse(message))
+      const parsed = JSON.parse(message) as MQTTResponse
+      if (topic === subTopic && parsed.userid === pubMessage.userid) {
+        resolve(parsed)
       }
     })
   })
