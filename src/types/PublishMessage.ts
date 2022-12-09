@@ -5,4 +5,6 @@ export interface PublishMessage {
   slotId?: string
   time?: number
   issuance?: number
+  password?: string
+  email?: string
 }
