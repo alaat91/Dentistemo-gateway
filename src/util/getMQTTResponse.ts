@@ -1,8 +1,17 @@
 import { QoS } from 'mqtt'
-import { parse } from 'path'
 import { client } from '../app'
 import { MQTTResponse } from '../types/MQTTResponse'
 import { PublishMessage } from '../types/PublishMessage'
+
+/**
+ * A function to get a response from the MQTT broker and return it as a promise
+ * This aims to use transform MQTT request into a promise based request
+ * @param pubTopic the topic to publish to
+ * @param subTopic the topic the response is expected on
+ * @param pubMessage the message to publish
+ * @param QOS the QOS of the message
+ * @returns Promise<MQTTResponse>
+ */
 
 export const getMQTTResponse = async (
   pubTopic: string,
