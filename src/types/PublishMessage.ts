@@ -8,6 +8,6 @@ export interface PublishMessage {
   password?: string
   email?: string
   clinic?: string
-  rangeStart?: number
-  rangeEnd?: number
+  start?: number
+  end?: number
 }
