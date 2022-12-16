@@ -7,15 +7,16 @@ export const router = Router()
 router.get('/:id/available', async (req, res) => {
   try {
     const clinic = req.params.id
-    const { start: rangeStart, end: rangeEnd } = req.body
+    const { start, end } = req.body
     const response = await getMQTTResponse(
       'clinics/slots/available',
       'gateway/clinics/available',
-      { clinic, rangeStart, rangeEnd }
+      { clinic, start, end }
     )
     if (response.error) {
       throw new MQTTErrorException(response.error)
-    }
+    } 
+    res.json(response)
   } catch (err) {
     if (err instanceof MQTTErrorException) {
       res.status(err.code).json(err.message)
