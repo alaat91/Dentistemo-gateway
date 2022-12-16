@@ -7,4 +7,7 @@ export interface PublishMessage {
   issuance?: number
   password?: string
   email?: string
+  clinic?: string
+  rangeStart?: number
+  rangeEnd?: number
 }

@@ -2,6 +2,7 @@ import { QoS } from 'mqtt'
 import { client } from '../app'
 import { MQTTResponse } from '../types/MQTTResponse'
 import { PublishMessage } from '../types/PublishMessage'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * A function to get a response from the MQTT broker and return it as a promise
@@ -20,8 +21,9 @@ export const getMQTTResponse = async (
   QOS?: number
 ): Promise<MQTTResponse> => {
   const mqttPromise = new Promise<MQTTResponse>((resolve, reject) => {
-    client.subscribe(subTopic, { qos: (QOS as QoS) ?? 1 })
-    client.publish(pubTopic, JSON.stringify(pubMessage), {
+    const responseTopic = `${subTopic}/${uuidv4()}`
+    client.subscribe(responseTopic, { qos: (QOS as QoS) ?? 1 })
+    client.publish(pubTopic, JSON.stringify({ ...pubMessage, responseTopic }), {
       qos: (QOS as QoS) ?? 1,
     })
     setTimeout(() => {
@@ -29,7 +31,7 @@ export const getMQTTResponse = async (
     }, 15000)
     client.on('message', (topic: string, message: string) => {
       const parsed = JSON.parse(message) as MQTTResponse
-      if (topic === subTopic && parsed.userid === pubMessage.userid) {
+      if (topic === responseTopic) {
         resolve(parsed)
       }
     })
