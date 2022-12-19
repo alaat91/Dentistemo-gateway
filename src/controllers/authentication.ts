@@ -4,16 +4,16 @@ import { getMQTTResponse } from '../util/getMQTTResponse'
 export const router = Router()
 
 router.post('/signup', async (req: Request, res: Response) => {
-  const { firstName, lastName, email, SSN, phone, password, confirmPassword } =
+  const { firstName, lastName, email, SSN, password, confirmPassword, phoneNumber } =
     req.body
   const request = {
     firstName,
     lastName,
     email,
     SSN,
-    phone,
     password,
     confirmPassword,
+    phoneNumber
   }
   try {
     const newUser = await getMQTTResponse(
