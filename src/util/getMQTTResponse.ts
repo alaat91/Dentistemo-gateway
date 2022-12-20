@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid'
  * @param QOS the QOS of the message
  * @returns Promise<MQTTResponse>
  */
-
+// TODO : implement error handling
 export const getMQTTResponse = async (
   pubTopic: string,
   subTopic: string,
