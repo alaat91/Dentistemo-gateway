@@ -24,8 +24,6 @@ router.get('/:id/available', async (req, res) => {
     if (response.error) {
       throw new MQTTErrorException(response.error)
     }
-<<<<<<< HEAD
-=======
     res.json(response)
   } catch (err) {
     if (err instanceof MQTTErrorException) {
@@ -68,7 +66,6 @@ router.get('/:id', async (req, res) => {
     if (response.error) {
       throw new MQTTErrorException(response.error)
     }
->>>>>>> main
     res.json(response)
   } catch (err) {
     if (err instanceof MQTTErrorException) {
