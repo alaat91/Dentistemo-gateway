@@ -6,12 +6,12 @@ import { PasswordRequest } from '../types/PasswordRequest'
 import { UserProfile } from '../types/UserProfile'
 import { getMQTTResponse } from '../util/getMQTTResponse'
 
-router.get('/profile', verifyUser, async (req: Request, res: Response) => {
-  const userid = req.body.id
+router.get('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
   try {
+    const userid = req.params.id
     const response = (await getMQTTResponse(
-      'auth/user/profile',
-      'gateway/user/profile',
+      'auth/user/return',
+      'gateway/user/return',
       { userid }
     )) as UserProfile
     res.send(response)
