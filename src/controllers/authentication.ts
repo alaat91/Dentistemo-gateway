@@ -4,8 +4,15 @@ import { getMQTTResponse } from '../util/getMQTTResponse'
 export const router = Router()
 
 router.post('/signup', async (req: Request, res: Response) => {
-  const { firstName, lastName, email, SSN, password, confirmPassword, phoneNumber } =
-    req.body
+  const {
+    firstName,
+    lastName,
+    email,
+    SSN,
+    password,
+    confirmPassword,
+    phoneNumber,
+  } = req.body
   const request = {
     firstName,
     lastName,
@@ -28,12 +35,13 @@ router.post('/signup', async (req: Request, res: Response) => {
 })
 
 router.post('/login', async (req: Request, res: Response) => {
+  const { email, password } = req.body
+  const request = { email, password }
   try {
-    const { email, password } = req.body
     const loginRequest = await getMQTTResponse(
       'auth/user/login',
       'gateway/user/login',
-      { email, password }
+      request
     )
     res.send(loginRequest)
   } catch (err) {
