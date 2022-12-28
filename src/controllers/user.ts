@@ -6,8 +6,7 @@ import { getMQTTResponse } from '../util/getMQTTResponse'
 
 export const router = Router()
 
-router.get('/profile/:id', async (req: Request, res: Response) => {
-  //TODO fix bug verifyUser
+router.get('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
   try {
     const userid = req.params.id
     const response = (await getMQTTResponse(
@@ -21,8 +20,7 @@ router.get('/profile/:id', async (req: Request, res: Response) => {
   }
 })
 
-router.put('/profile/:id', async (req: Request, res: Response) => {
-  //TODO fix bug verifyUser
+router.put('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
   try {
     const userid = req.body
     const response = (await getMQTTResponse(
@@ -33,5 +31,19 @@ router.put('/profile/:id', async (req: Request, res: Response) => {
     res.send(response)
   } catch (err) {
     res.status(500).send((err as Error).message)
+  }
+})
+
+router.delete('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
+  try {
+    const userid = req.params.id
+    const response = (await getMQTTResponse(
+      'auth/user/delete',
+      'gateway/user/delete',
+      { userid }
+    )) as UserProfile
+    res.send(response)
+  } catch (error) {
+    res.status(500).send((error as Error).message)
   }
 })
