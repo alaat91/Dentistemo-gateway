@@ -3,7 +3,6 @@ import { client } from '../app'
 import { MQTTResponse } from '../types/MQTTResponse'
 import { PublishMessage } from '../types/PublishMessage'
 import { v4 as uuidv4 } from 'uuid'
-import { MQTTErrorException } from '../exceptions/MQTTErrorException'
 
 /**
  * A function to get a response from the MQTT broker and return it as a promise

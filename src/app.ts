@@ -5,6 +5,7 @@ import { router as bookingController } from './controllers/booking'
 import { router as userController } from './controllers/user'
 import { router as authController } from './controllers/authentication'
 import { router as clinicController } from './controllers/clinics'
+import { requestID } from './util/requestID'
 import cors from 'cors'
 
 dotenv.config()
@@ -16,6 +17,7 @@ app.options('*', cors())
 app.use(cors({ credentials: true, origin: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(requestID)
 app.use('/api/v1/bookings', bookingController)
 app.use('/api/v1/users', userController)
 app.use('/api/v1/auth', authController)

@@ -1,18 +1,16 @@
 import { Request, Response, Router } from 'express'
-//import { verifyUser } from '../middleware/verifyUser'
-//import { PasswordRequest } from '../types/PasswordRequest'
+import { verifyUser } from '../middleware/verifyUser'
 import { UserProfile } from '../types/UserProfile'
 import { getMQTTResponse } from '../util/getMQTTResponse'
 
 export const router = Router()
 
-router.get('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
+router.get('/profile/', verifyUser, async (req: Request, res: Response) => {
   try {
-    const userid = req.params.id
     const response = (await getMQTTResponse(
       'auth/user/return',
       'gateway/user/return',
-      { userid }
+      { user_id: req.user_id }
     )) as UserProfile
     res.send(response)
   } catch (err) {
@@ -20,13 +18,12 @@ router.get('/profile/:id', async (req: Request, res: Response) => { //TODO fix b
   }
 })
 
-router.put('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
+router.put('/profile/', verifyUser, async (req: Request, res: Response) => {
   try {
-    const userid = req.body
     const response = (await getMQTTResponse(
       'auth/user/update',
       'gateway/user/update',
-      { userid }
+      { user_id: req.user_id }
     )) as UserProfile
     res.send(response)
   } catch (err) {
@@ -34,13 +31,12 @@ router.put('/profile/:id', async (req: Request, res: Response) => { //TODO fix b
   }
 })
 
-router.delete('/profile/:id', async (req: Request, res: Response) => { //TODO fix bug verifyUser
+router.delete('/profile/', verifyUser, async (req: Request, res: Response) => {
   try {
-    const userid = req.params.id
     const response = (await getMQTTResponse(
       'auth/user/delete',
       'gateway/user/delete',
-      { userid }
+      { user_id: req.user_id }
     )) as UserProfile
     res.send(response)
   } catch (error) {
