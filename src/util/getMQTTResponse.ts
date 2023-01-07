@@ -13,7 +13,6 @@ import { v4 as uuidv4 } from 'uuid'
  * @param QOS the QOS of the message
  * @returns Promise<MQTTResponse>
  */
-// TODO : implement error handling
 export const getMQTTResponse = async (
   pubTopic: string,
   subTopic: string,
@@ -28,11 +27,15 @@ export const getMQTTResponse = async (
     })
     setTimeout(() => {
       reject(new Error('timeout'))
-    }, 15000)
+    }, 1000)
     client.on('message', (topic: string, message: string) => {
-      const parsed = JSON.parse(message) as MQTTResponse
-      if (topic === responseTopic) {
+      if (message.length == 0) {
+        return mqttPromise
+      }
+      else if (topic === responseTopic) {
+        const parsed = JSON.parse(message) as MQTTResponse
         resolve(parsed)
+        return mqttPromise
       }
     })
   })

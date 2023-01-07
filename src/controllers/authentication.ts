@@ -59,7 +59,7 @@ router.post('/login', async (req: Request, res: Response) => {
     if (error instanceof MQTTErrorException) {
       res.status(error.code).json(error.message)
     } else {
-      res.status(500).json(error)
+      res.status(500).json('Error')
     }
   }
 })
