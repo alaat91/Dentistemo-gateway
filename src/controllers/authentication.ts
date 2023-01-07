@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express'
+import { MQTTErrorException } from '../exceptions/MQTTErrorException'
 import { getMQTTResponse } from '../util/getMQTTResponse'
 
 export const router = Router()
@@ -20,7 +21,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     SSN,
     password,
     confirmPassword,
-    phoneNumber
+    phoneNumber,
   }
   try {
     const newUser = await getMQTTResponse(
@@ -28,9 +29,16 @@ router.post('/signup', async (req: Request, res: Response) => {
       'gateway/user/create',
       request
     )
+    if (newUser.error) {
+      throw new MQTTErrorException(newUser.error)
+    }
     res.send(newUser)
-  } catch (err) {
-    res.status(500).send((err as Error).message)
+  } catch (error) {
+    if (error instanceof MQTTErrorException) {
+      res.status(error.code).json(error.message)
+    } else {
+      res.status(500).json((error as Error).message)
+    }
   }
 })
 
@@ -43,8 +51,15 @@ router.post('/login', async (req: Request, res: Response) => {
       'gateway/user/login',
       request
     )
+    if (loginRequest.error) {
+      throw new MQTTErrorException(loginRequest.error)
+    }
     res.send(loginRequest)
-  } catch (err) {
-    res.status(500).send((err as Error).message)
+  } catch (error) {
+    if (error instanceof MQTTErrorException) {
+      res.status(error.code).json(error.message)
+    } else {
+      res.status(500).json((error as Error).message)
+    }
   }
 })

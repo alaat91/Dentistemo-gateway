@@ -1,5 +1,5 @@
 import { MQTTResponse } from './MQTTResponse'
 
 export interface VerificationResponse extends MQTTResponse {
-  verified: boolean
+  user_id: string
 }
