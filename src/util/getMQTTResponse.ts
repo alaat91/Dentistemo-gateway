@@ -3,6 +3,7 @@ import { client } from '../app'
 import { MQTTResponse } from '../types/MQTTResponse'
 import { PublishMessage } from '../types/PublishMessage'
 import { v4 as uuidv4 } from 'uuid'
+import { MQTTErrorException } from '../exceptions/MQTTErrorException'
 
 /**
  * A function to get a response from the MQTT broker and return it as a promise
@@ -27,15 +28,15 @@ export const getMQTTResponse = async (
     })
     setTimeout(() => {
       reject(new Error('timeout'))
-    }, 1000)
+    }, 15000)
     client.on('message', (topic: string, message: string) => {
-      if (message.length == 0) {
-        return mqttPromise
-      }
-      else if (topic === responseTopic) {
-        const parsed = JSON.parse(message) as MQTTResponse
-        resolve(parsed)
-        return mqttPromise
+      if (topic === responseTopic) {
+        try {
+          const parsed = JSON.parse(message) as MQTTResponse
+          resolve(parsed)
+        } catch(err) {
+          reject(new Error('something went wrong'))
+        }
       }
     })
   })
