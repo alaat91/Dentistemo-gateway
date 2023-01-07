@@ -1,5 +1,5 @@
 export interface PublishMessage {
-  userid?: string
+  user_id?: string
   token?: string
   bookingId?: string
   slotId?: string
