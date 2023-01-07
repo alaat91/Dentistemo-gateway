@@ -27,6 +27,7 @@ export const getMQTTResponse = async (
       qos: (QOS as QoS) ?? 1,
     })
     setTimeout(() => {
+      client.off('message', callback)
       reject(new Error('timeout'))
     }, 15000)
     const callback = (topic: string, message: string) => {
@@ -35,7 +36,7 @@ export const getMQTTResponse = async (
           client.off('message', callback)
           const parsed = JSON.parse(message) as MQTTResponse
           resolve(parsed)
-        } catch(err) {
+        } catch (err) {
           reject(new Error('something went wrong'))
         }
       }
