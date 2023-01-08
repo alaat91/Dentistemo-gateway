@@ -28,7 +28,7 @@ export const getMQTTResponse = async (
     setTimeout(() => {
       client.off('message', callback)
       reject(new Error('timeout'))
-    }, 15000)
+    }, 5000)
     const callback = (topic: string, message: string) => {
       if (topic === responseTopic) {
         try {

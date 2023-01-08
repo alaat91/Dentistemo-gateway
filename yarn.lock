@@ -158,6 +158,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
   integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
 
+"@types/opossum@^6.2.2":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@types/opossum/-/opossum-6.2.2.tgz#f3526a6c7966dbe28b5722e59513feedb2616c8d"
+  integrity sha512-VYrqkucrT4nbQZpPxk522+HnhAC5f0EEZNMZATCRQeJwchNwx/GqBscZrHCQvNRx7mlhbgMvZ0DG4NE6BgiVAw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/qs@*":
   version "6.9.7"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
@@ -1544,6 +1551,11 @@ onetime@^6.0.0:
   integrity sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==
   dependencies:
     mimic-fn "^4.0.0"
+
+opossum@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/opossum/-/opossum-7.0.1.tgz#4691adf5505dd075a38ce9b404afad65cbd170f0"
+  integrity sha512-mM6mFi0ugBn1a2Q1Z7wPnfoNrLeEwn87FKLgkyPENgevt5Ct6OjTlAR7uT7YeegAZ6qj3Fz/Bt0+9VlWGtNDdQ==
 
 optionator@^0.9.1:
   version "0.9.1"
