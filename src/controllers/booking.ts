@@ -34,6 +34,7 @@ router.get('/updated', (req: Request, res: Response) => {
   res.on('close', () => {
     client.unsubscribe('gateway/bookings/new')
     res.end()
+    return
   })
 })
 
