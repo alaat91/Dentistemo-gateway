@@ -28,10 +28,11 @@ router.get('/profile/', verifyUser, async (req: Request, res: Response) => {
 
 router.put('/profile/', verifyUser, async (req: Request, res: Response) => {
   try {
+    const request = req.body
     const response = (await circuitBreaker.fire(
       'auth/user/update',
       'gateway/user/update',
-      { user_id: req.user_id }
+      { user_id: req.user_id, ...request}
     )) as UserProfile
     res.send(response)
   } catch (err) {
