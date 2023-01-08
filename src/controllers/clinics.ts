@@ -85,3 +85,25 @@ router.get('/:id', async (req, res) => {
     }
   }
 })
+
+
+router.get('/dentists/:id', async (req, res) => {
+  try {
+    const dentist = req.params.id
+    const response = await circuitBreaker.fire(
+      'clinics/dentists/get',
+      'gateway/clinics/dentists/get',
+      { id: dentist }
+    )
+    if (response.error) {
+      throw new MQTTErrorException(response.error)
+    }
+    res.json(response)
+  } catch (err) {
+    if (err instanceof MQTTErrorException) {
+      res.status(err.code).json(err.message)
+    } else {
+      res.status(500).json(err)
+    }
+  }
+})
