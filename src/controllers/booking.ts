@@ -29,7 +29,7 @@ router.get('/', verifyUser, async (req: Request, res: Response) => {
     if (response.error) {
       throw new MQTTErrorException(response.error)
     }
-    res.send(response.bookings)
+    res.json(response)
   } catch (err) {
     if (err instanceof MQTTErrorException) {
       res.status(err.code).send(err.message)
