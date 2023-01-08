@@ -40,14 +40,14 @@ router.get('/updated', (req: Request, res: Response) => {
 router.get('/', verifyUser, async (req: Request, res: Response) => {
   try {
     const response = (await circuitBreaker.fire(
-      'bookings/user/bookings',
-      'gateway/user/bookings',
+      'bookings/get/all',
+      'gateway/bookings/get/all',
       { user_id: req.user_id }
     )) as BookingsResponse
     if (response.error) {
       throw new MQTTErrorException(response.error)
     }
-    res.send(response.bookings)
+    res.json(response)
   } catch (err) {
     if (err instanceof MQTTErrorException) {
       res.status(err.code).send(err.message)
@@ -82,9 +82,9 @@ router.post('/', verifyUser, async (req: Request, res: Response) => {
   const request = req.body as BookingRequest
   try {
     const response = (await circuitBreaker.fire(
-      'user/booking/create',
-      'gateway/user/booking/create',
-      { user_id: req.user_id, ...request }
+      'bookings/new',
+      'gateway/bookings/new',
+      { request_id: req.request_id, user_id: req.user_id, ...request }
     )) as Booking
     if (response.error) {
       throw new MQTTErrorException(response.error)
