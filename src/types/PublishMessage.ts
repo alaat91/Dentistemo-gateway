@@ -11,4 +11,5 @@ export interface PublishMessage {
   start?: number
   end?: number
   request_id?: string
+  id?: string
 }
