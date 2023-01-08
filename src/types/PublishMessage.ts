@@ -10,4 +10,5 @@ export interface PublishMessage {
   clinic?: string
   start?: number
   end?: number
+  request_id?: string
 }
