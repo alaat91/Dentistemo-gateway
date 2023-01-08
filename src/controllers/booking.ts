@@ -1,14 +1,21 @@
 import { Request, Response, Router } from 'express'
-
-export const router = Router()
-
 import { verifyUser } from '../middleware/verifyUser'
 import { Booking } from '../types/Booking'
 import { BookingDeletion } from '../types/BookingDeletion'
 import { BookingRequest } from '../types/BookingRequest'
 import { BookingsResponse } from '../types/BookingsResponse'
 import { MQTTErrorException } from '../exceptions/MQTTErrorException'
-import { circuitBreaker } from '../app'
+import { getMQTTResponse } from '../util/getMQTTResponse'
+import CircuitBreaker from 'opossum'
+
+export const router = Router()
+
+const circuitBreaker = new CircuitBreaker(getMQTTResponse, {
+  timeout: 5000,
+  errorThresholdPercentage: 50,
+  resetTimeout: 10000,
+})
+circuitBreaker.fallback(() => ({error: {code: 503, message: 'Service Unavailable'}}))
 
 router.get('/', verifyUser, async (req: Request, res: Response) => {
   try {

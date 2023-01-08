@@ -7,19 +7,10 @@ import { router as authController } from './controllers/authentication'
 import { router as clinicController } from './controllers/clinics'
 import { requestID } from './util/requestID'
 import cors from 'cors'
-import CircuitBreaker from 'opossum'
-import { getMQTTResponse } from './util/getMQTTResponse'
 
 dotenv.config()
 
 export const client = mqtt.connect(process.env.MQTT_URI as string)
-export const circuitBreaker = new CircuitBreaker(getMQTTResponse, {
-  timeout: 5000,
-  errorThresholdPercentage: 50,
-  resetTimeout: 10000,
-})
-circuitBreaker.fallback(() => ({error: {code: 503, message: 'Service Unavailable'}}))
-
 const app = express()
 
 app.options('*', cors())

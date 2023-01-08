@@ -1,8 +1,16 @@
 import { Router } from 'express'
-import { circuitBreaker } from '../app'
+import CircuitBreaker from 'opossum'
 import { MQTTErrorException } from '../exceptions/MQTTErrorException'
+import { getMQTTResponse } from '../util/getMQTTResponse'
 
 export const router = Router()
+
+const circuitBreaker = new CircuitBreaker(getMQTTResponse, {
+  timeout: 5000,
+  errorThresholdPercentage: 50,
+  resetTimeout: 10000,
+})
+circuitBreaker.fallback(() => ({error: {code: 503, message: 'Service Unavailable'}}))
 
 // get clinic by id to show available time slots
 router.get('/:id/available', async (req, res) => {
