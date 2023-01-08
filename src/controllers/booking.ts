@@ -7,6 +7,7 @@ import { BookingsResponse } from '../types/BookingsResponse'
 import { MQTTErrorException } from '../exceptions/MQTTErrorException'
 import { getMQTTResponse } from '../util/getMQTTResponse'
 import CircuitBreaker from 'opossum'
+import { client } from '../app'
 
 export const router = Router()
 
@@ -15,7 +16,26 @@ const circuitBreaker = new CircuitBreaker(getMQTTResponse, {
   errorThresholdPercentage: 50,
   resetTimeout: 10000,
 })
-circuitBreaker.fallback(() => ({error: {code: 503, message: 'Service Unavailable'}}))
+circuitBreaker.fallback(() => ({
+  error: { code: 503, message: 'Service Unavailable' },
+}))
+
+router.get('/updated', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  client.subscribe('gateway/bookings/new')
+  client.on('message', (topic) => {
+    if (topic === 'gateway/bookings/new') {
+      res.write('data: bookings updated\n\n')
+    }
+  })
+  res.on('close', () => {
+    client.unsubscribe('gateway/bookings/new')
+    res.end()
+  })
+})
 
 router.get('/', verifyUser, async (req: Request, res: Response) => {
   try {
