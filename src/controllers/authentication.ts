@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
+import { circuitBreaker } from '../app'
 import { MQTTErrorException } from '../exceptions/MQTTErrorException'
-import { getMQTTResponse } from '../util/getMQTTResponse'
 
 export const router = Router()
 
@@ -24,7 +24,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     phoneNumber,
   }
   try {
-    const newUser = await getMQTTResponse(
+    const newUser = await circuitBreaker.fire(
       'auth/user/create',
       'gateway/user/create',
       request
@@ -46,7 +46,7 @@ router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body
   const request = { email, password }
   try {
-    const loginRequest = await getMQTTResponse(
+    const loginRequest = await circuitBreaker.fire(
       'auth/user/login',
       'gateway/user/login',
       request
