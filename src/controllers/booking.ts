@@ -58,6 +58,27 @@ router.get('/', verifyUser, async (req: Request, res: Response) => {
   }
 })
 
+router.delete('/:id', verifyUser, async (req: Request, res: Response) => {
+  const bookingId = req.params.id
+  try {
+    const response = (await circuitBreaker.fire(
+      'bookings/delete',
+      'gateway/bookings/delete',
+      { user_id: req.user_id, bookingId }
+    )) as BookingDeletion
+    if (response.error) {
+      throw new MQTTErrorException(response.error)
+    }
+    res.send(response)
+  } catch (err) {
+    if (err instanceof MQTTErrorException) {
+      res.status(err.code).send(err.message)
+    } else {
+      res.status(500).send((err as Error).message)
+    }
+  }
+})
+
 router.get('/:id', verifyUser, async (req: Request, res: Response) => {
   const bookingId = req.params.id
   try {
@@ -109,27 +130,6 @@ router.put('/:id', verifyUser, async (req: Request, res: Response) => {
       'gateway/user/booking/update',
       { user_id: req.user_id, bookingId, time }
     )) as Booking
-    if (response.error) {
-      throw new MQTTErrorException(response.error)
-    }
-    res.send(response)
-  } catch (err) {
-    if (err instanceof MQTTErrorException) {
-      res.status(err.code).send(err.message)
-    } else {
-      res.status(500).send((err as Error).message)
-    }
-  }
-})
-
-router.delete('/:id', verifyUser, async (req: Request, res: Response) => {
-  const bookingId = req.body.id
-  try {
-    const response = (await circuitBreaker.fire(
-      'user/booking/delete',
-      'gateway/user/booking/delete',
-      { user_id: req.user_id, bookingId }
-    )) as BookingDeletion
     if (response.error) {
       throw new MQTTErrorException(response.error)
     }
